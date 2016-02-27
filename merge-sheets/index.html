@@ -1,0 +1,64 @@
+<html>
+<head>
+<script src="../libs/xlsx.core.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<h1>將 Excel 同格式的各分頁合成一個 CSV 的工具</h1>
+<p>您手上的 Excel 檔每個分頁格式都一模一樣，你想把他合併成一個 CSV 嗎? <a href="sample.xls">範例Excel檔</a></p>
+<div style="float: left">
+    <div style="border:1px solid">
+	<div id="drop">您可以將 Excel 檔案拖到這邊</div>
+	或是點選 <input type="file" name="xlfile" id="xlf" /><br>
+    </div>
+    分頁名稱: <input type="text" name="tab_name" value="縣市"><br>
+    欄位第幾行開始: <input type="text" name="col_line" value="1"><br>
+    <button id="refresh">重整</button>
+</div>
+<div style="float: left">
+    訊息區: <textarea id="message" style="width: 300px; height: 100px"></textarea>
+</div>
+<hr style="clear: both">
+結果
+輸出分隔符號: 
+<label><input type="radio" name="split" value="," checked>逗點</label>
+<label><input type="radio" name="split" value="tab">TAB</label>
+<br>
+<textarea style="width:100%; height: 300px" id="result"></textarea>
+<script>
+
+excel_parse_options = {
+    "ignore-empty-line": true, // 如果整行都是空白就不要回傳
+    "ignore-line-tail-null": true, // 單行後面的 null 都移除掉
+};
+
+// 只需要實作 main() ，輸入的資料是 excel 解出來的資料，輸出 csv 的 array ，其他事交給 tool-init.js 解決
+// warnings 是解析過程中發現的問題，您也可以增加自己的 warnings
+function main(excel_sheets, warnings)
+{
+    var start = parseInt($('input[name="col_line"]').val());
+    var column_showed = false;
+    var csv_data = [];
+
+    for (var tab in excel_sheets) {
+        sheet_data = excel_sheets[tab];
+	if (!column_showed) {
+            // CSV 第一行存入 tab_name 加上 excel 中欄位那一行的值
+            csv_data.push([$('input[name="tab_name"]').val()].concat(sheet_data.data[start - 1]));
+            column_showed = tab;
+	} else {
+            if (excel_sheets[column_showed].data[start - 1].join('') != sheet_data.data[start - 1].join('')) {
+		warnings.push("分頁 " + tab + "的標頭欄位「" + sheet_data.data[start - 1].join(',') + "」 與分頁 " + column_showed + " 的「" + excel_sheets[column_showed].data[start - 1].join(',') + "」不同，可能是欄位行數填寫錯誤");
+	    }
+	}
+
+        for (var row = start; row < sheet_data.height; row ++) {
+            csv_data.push([tab].concat(sheet_data.data[row]));
+        }
+    }
+    return [csv_data, warnings];
+}
+
+</script>
+<script src="../libs/tool-init.js"></script>
+</html>
