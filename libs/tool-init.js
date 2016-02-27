@@ -14,6 +14,7 @@ function fixdata(data) {
 }
 
 function process_wb(wb) {
+    $('#message').text('處理中');
     var output = "";
     output = transfer_workbook(wb);
     document.getElementById('result').innerText = output;
@@ -91,7 +92,9 @@ r: parseInt(match[2]),
         ret[tab].height = ret[tab].data.length;
     }
 
-    csv_array = main(ret, warnings);
+    ret = main(ret, warnings);
+    csv_array = ret[0];
+    warnings = ret[1];
 
     split = $('input[name="split"]:checked').val();
     result = '';
@@ -121,11 +124,13 @@ r: parseInt(match[2]),
             }).join("\t") + "\n";
         }
     }
+    $('#message').text("處理完成\n" + warnings.join("\n"));
     return result;
 }
 
 var wb;
 function handleDrop(e) {
+    $('#message').text('處理中');
     e.stopPropagation();
     e.preventDefault();
     var files = e.dataTransfer.files;
@@ -154,3 +159,24 @@ if(drop.addEventListener) {
     drop.addEventListener('dragover', handleDragover, false);
     drop.addEventListener('drop', handleDrop, false);
 }
+
+var xlf = document.getElementById('xlf');
+function handleFile(e) {
+    $('#message').text('處理中');
+	var files = e.target.files;
+	var f = files[0];
+	{
+		var reader = new FileReader();
+		var name = f.name;
+		reader.onload = function(e) {
+			var data = e.target.result;
+			var wb;
+			var arr = fixdata(data);
+			wb = X.read(btoa(arr), {type: 'base64'});
+			process_wb(wb);
+		};
+		reader.readAsArrayBuffer(f);
+	}
+}
+
+if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
