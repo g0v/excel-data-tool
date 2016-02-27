@@ -1,0 +1,48 @@
+<html>
+<head>
+<script src="../libs/xlsx.core.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<h1>template:工具標題</h1>
+<p>template:工具描述</p>
+<div style="float: left">
+    <div style="border:1px solid">
+	<div id="drop">您可以將 Excel 檔案拖到這邊</div>
+	或是點選 <input type="file" name="xlfile" id="xlf" /><br>
+    </div>
+    template: 工具需要的選項
+    <button id="refresh">重整</button>
+</div>
+<div style="float: left">
+    訊息區: <textarea id="message" style="width: 300px; height: 100px"></textarea>
+</div>
+<hr style="clear: both">
+結果
+輸出分隔符號: 
+<label><input type="radio" name="split" value="," checked>逗點</label>
+<label><input type="radio" name="split" value="tab">TAB</label>
+<br>
+<textarea style="width:100%; height: 300px" id="result"></textarea><br>
+<form id="download-form">
+下載檔名: <input type="text" id="download-file" value="output.csv"><button type="submit">下載</button>
+</form>
+<script>
+
+excel_parse_options = {
+    "ignore-empty-line": true, // 如果整行都是空白就不要回傳
+    "ignore-line-tail-null": true, // 單行後面的 null 都移除掉
+};
+
+// 只需要實作 main() ，輸入的資料是 excel 解出來的資料，輸出 csv 的 array ，其他事交給 tool-init.js 解決
+// warnings 是解析過程中發現的問題，您也可以增加自己的 warnings
+function main(excel_sheets, warnings)
+{
+    var csv_data = [];
+    // template: 處理 excel_sheets ，回傳一個二維陣列以及增加的 warnings
+    return [csv_data, warnings];
+}
+
+</script>
+<script src="../libs/tool-init.js"></script>
+</html>
