@@ -24,7 +24,10 @@
 <label><input type="radio" name="split" value="," checked>逗點</label>
 <label><input type="radio" name="split" value="tab">TAB</label>
 <br>
-<textarea style="width:100%; height: 300px" id="result"></textarea>
+<textarea style="width:100%; height: 300px" id="result"></textarea><br>
+<form id="download-form">
+下載檔名: <input type="text" id="download-file" value="output.csv"><button type="submit">下載</button>
+</form>
 <script>
 
 excel_parse_options = {

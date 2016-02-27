@@ -180,3 +180,12 @@ function handleFile(e) {
 }
 
 if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+
+$('#download-form').submit(function(e){
+	e.preventDefault();
+        var a = document.createElement('a');
+        var blob = new Blob([$('#result').val()], {'type': 'text/plain'});
+        a.href = window.URL.createObjectURL(blob);
+        a.download = $('#download-file').val();
+        a.click();
+});
