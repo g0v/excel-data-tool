@@ -184,7 +184,7 @@ if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
 $('#download-form').submit(function(e){
 	e.preventDefault();
         var a = document.createElement('a');
-        var blob = new Blob([$('#result').val()], {'type': 'text/csv'});
+        var blob = new Blob([$('#result').val()], {'type': 'octet/stream'});
         a.href = window.URL.createObjectURL(blob);
         a.download = $('#download-file').val();
         a.click();
