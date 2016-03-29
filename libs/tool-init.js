@@ -70,7 +70,7 @@ r: parseInt(match[2]),
 	for (var j = range.s.r; j <= range.e.r; j ++) {
 	    var row = [];
 	    isempty = -1;
-	    for (var k = range.s.c; k < range.e.c; k ++){
+	    for (var k = range.s.c; k <= range.e.c; k ++){
 		if ('undefined' === typeof(workbook.Sheets[tab][int_to_char(k) + j])) {
 		    row.push(null);
 		} else {
@@ -78,7 +78,7 @@ r: parseInt(match[2]),
                         warnings.push("分頁" + tab + " 的 " + int_to_char(k) + j + "格有錯誤的公式");
                     }
 		    row.push(workbook.Sheets[tab][int_to_char(k) + j].w);
-		    isempty = row.length - 1;
+		    isempty = row.length;
 		}
 	    }
 	    if (!excel_parse_options["ignore-empty-line"] || isempty > 0) {
