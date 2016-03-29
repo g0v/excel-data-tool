@@ -1,0 +1,119 @@
+<html>
+<head>
+<script src="../libs/xlsx.core.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<nav id="nav">
+<a href="#" title="Change current language to cht" data-lang-ref="zh_tw">繁體中文</a>
+<a href="#" title="Change current language to English" data-lang-ref="en">English</a>
+</nav>
+<h1 data-translatable>
+    <span>將 Excel 轉成一個 UTF-8 CSV 的工具</span>
+    <span>Convert Excel Sheets to One UTF-8 CSV</span>
+</h1>
+<p>
+    <div data-translatable>
+        <span>您手上的 Excel ，你想把他轉成 CSV 嗎?</span>
+        <span>You have Excel, do you want to convert to one CSV?</span>
+    </div>
+    <a href="sample.xls">
+        <font data-translatable>
+            <span>範例 Excel 檔</span>
+            <span>Example Excel File</span>
+        </font>
+    </a>
+</p>
+<div style="float: left">
+    <div style="border:1px solid">
+	<div id="drop" data-translatable>
+        <span>您可以將 Excel 檔案拖到這邊</span>
+        <span>Drog Excel file here</span>
+    </div>
+    <font data-translatable>
+        <span>或是點選 </span>
+        <span>or click </span>
+    </font>
+        <input type="file" name="xlfile" id="xlf" /><br>
+    </div>
+    <button id="refresh">
+        <font data-translatable>
+            <span>重整 </span>
+            <span>Refresh </span>
+        </font>
+    </button>
+</div>
+<div style="float: left">
+    <font data-translatable>
+        <span>訊息區: </span>
+        <span>Message: </span>
+    </font>
+    <textarea id="message" style="width: 300px; height: 100px"></textarea>
+</div>
+<hr style="clear: both">
+<font data-translatable>
+    <span>結果 輸出分隔符號: </span>
+    <span>Result Seperator: </span>
+</font>
+<label><input type="radio" name="split" value="," checked>,</label>
+<label><input type="radio" name="split" value="tab">TAB</label>
+<br>
+<textarea style="width:100%; height: 300px" id="result"></textarea><br>
+<form id="download-form">
+    <font data-translatable>
+        <span>下載檔名: </span>
+        <span>Download file name: </span>
+    </font>
+    <input type="text" id="download-file" value="output.csv">
+    <button type="submit">
+        <font data-translatable>
+            <span>下載</span>
+            <span>Download</span>
+        </font>
+    </button>
+</form>
+<script>
+
+excel_parse_options = {
+    "ignore-empty-line": true, // 如果整行都是空白就不要回傳
+    "ignore-line-tail-null": true, // 單行後面的 null 都移除掉
+};
+
+// 只需要實作 main() ，輸入的資料是 excel 解出來的資料，輸出 csv 的 array ，其他事交給 tool-init.js 解決
+// warnings 是解析過程中發現的問題，您也可以增加自己的 warnings
+function main(excel_sheets, warnings)
+{
+    var start = parseInt($('input[name="col_line"]').val());
+    var csv_data = [];
+
+        console.log(excel_sheets);
+    for (var tab in excel_sheets) {
+        sheet_data = excel_sheets[tab];
+        for (var row = 0; row < sheet_data.height; row ++) {
+            csv_data.push(sheet_data.data[row]);
+        }
+    }
+    return [csv_data, warnings];
+}
+
+</script>
+<script src="../libs/tool-init.js"></script>
+<script src="../dist/dom-i18n.min.js"></script>
+<script>
+    var i18n = domI18n({
+        selector: '[data-translatable]',
+        separator: ' // ',
+        languages: ['zh_tw', 'en'],
+        defaultLanguage: 'zh_tw',
+        currentLanguage: 'zh_tw'
+    });
+
+    var nav = Array.prototype.slice.call(document.querySelectorAll('#nav > a'));
+    nav.forEach(function (item) {
+        item.onclick = function (e) {
+        i18n.changeLanguage(this.getAttribute('data-lang-ref'));
+        e.preventDefault();
+        };
+    });
+</script>
+</html>
