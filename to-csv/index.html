@@ -36,6 +36,7 @@
     </font>
         <input type="file" name="xlfile" id="xlf" /><br>
     </div>
+    處理合併儲存格(handle merged cells) <input type="checkbox" name="handle-merge" id="handle-merge" value="1"><br>
     <button id="refresh">
         <font data-translatable>
             <span>重整 </span>
@@ -77,6 +78,7 @@
 excel_parse_options = {
     "ignore-empty-line": true, // 如果整行都是空白就不要回傳
     "ignore-line-tail-null": true, // 單行後面的 null 都移除掉
+    "with-merge-cells": true, // 加上合併儲存格打散
 };
 
 // 只需要實作 main() ，輸入的資料是 excel 解出來的資料，輸出 csv 的 array ，其他事交給 tool-init.js 解決
@@ -86,10 +88,20 @@ function main(excel_sheets, warnings)
     var start = parseInt($('input[name="col_line"]').val());
     var csv_data = [];
 
-        console.log(excel_sheets);
     for (var tab in excel_sheets) {
         sheet_data = excel_sheets[tab];
         for (var row = 0; row < sheet_data.height; row ++) {
+            sheet_data.data[row] = sheet_data.data[row].map(function(v){
+                if ('object' == typeof(v)) {
+                    if ($('#handle-merge').is(':checked')) {
+                        return sheet_data.data[v.from[0]][v.from[1]];
+                    } else {
+                        return '';
+                    }
+                } else {
+                    return v;
+                }
+            });
             csv_data.push(sheet_data.data[row]);
         }
     }
