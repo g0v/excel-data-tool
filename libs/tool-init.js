@@ -89,8 +89,7 @@ r: parseInt(match[2]),
                 ret[tab].width = Math.max(ret[tab].width, row.length);
 	    }
 	}
-        if (excel_parse_options["with-merge-cells"]) {
-            console.log(ret[tab].data);
+        if (excel_parse_options["with-merge-cells"] && 'undefined' !== typeof(workbook.Sheets[tab]['!merges'])) {
             for ( var i = 0; i < workbook.Sheets[tab]['!merges'].length; i ++ ) {
                 var merge = workbook.Sheets[tab]['!merges'][i];
                 for (var c = merge.s.c; c <= merge.e.c; c++) {
