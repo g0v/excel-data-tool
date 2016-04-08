@@ -89,6 +89,20 @@ r: parseInt(match[2]),
                 ret[tab].width = Math.max(ret[tab].width, row.length);
 	    }
 	}
+        if (excel_parse_options["with-merge-cells"]) {
+            console.log(ret[tab].data);
+            for ( var i = 0; i < workbook.Sheets[tab]['!merges'].length; i ++ ) {
+                var merge = workbook.Sheets[tab]['!merges'][i];
+                for (var c = merge.s.c; c <= merge.e.c; c++) {
+                    for (var r = merge.s.r; r <= merge.e.r; r ++) {
+                        if (c == merge.s.c && r == merge.s.r) {
+                            continue;
+                        }
+                        ret[tab].data[r][c] = {'type' : 'merge', 'from' : [merge.s.r , merge.s.c]};
+                    }
+                }
+            }
+        }
         ret[tab].height = ret[tab].data.length;
     }
 
