@@ -17,7 +17,7 @@ function process_wb(wb) {
     $('#message').text('處理中');
     var output = "";
     output = transfer_workbook(wb);
-    document.getElementById('result').innerText = output;
+    $('#result').val(output);
 }
 
 function transfer_workbook(workbook) {
