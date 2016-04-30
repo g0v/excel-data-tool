@@ -93,7 +93,7 @@ function main(excel_sheets, warnings)
         for (var row = 0; row < sheet_data.height; row ++) {
             sheet_data.data[row] = sheet_data.data[row].map(function(v){
                 if ('object' == typeof(v)) {
-                    if ($('#handle-merge').is(':checked')) {
+                    if (v !== null && v.type == 'merge' && $('#handle-merge').is(':checked')) {
                         return sheet_data.data[v.from[0]][v.from[1]];
                     } else {
                         return '';
