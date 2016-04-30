@@ -37,6 +37,7 @@
         <input type="file" name="xlfile" id="xlf" /><br>
     </div>
     處理合併儲存格(handle merged cells) <input type="checkbox" name="handle-merge" id="handle-merge" value="1"><br>
+    移除換行(remove newline) <input type="checkbox" name="remove-newline" id="remove-newline" value="1"><br>
     <button id="refresh">
         <font data-translatable>
             <span>重整 </span>
@@ -76,7 +77,7 @@
 <script>
 
 excel_parse_options = {
-    "ignore-empty-line": true, // 如果整行都是空白就不要回傳
+    "ignore-empty-line": false, // 如果整行都是空白就不要回傳
     "ignore-line-tail-null": true, // 單行後面的 null 都移除掉
     "with-merge-cells": true, // 加上合併儲存格打散
 };
@@ -99,6 +100,9 @@ function main(excel_sheets, warnings)
                         return '';
                     }
                 } else {
+                    if ($('#remove-newline').is(':checked')) {
+                        return v.replace(/\n/g, '');
+                    }
                     return v;
                 }
             });
