@@ -183,7 +183,6 @@ function handleFile(e) {
 		var name = f.name;
 		reader.onload = function(e) {
 			var data = e.target.result;
-			var wb;
 			var arr = fixdata(data);
 			wb = X.read(btoa(arr), {type: 'base64'});
 			process_wb(wb);
