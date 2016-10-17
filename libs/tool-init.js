@@ -67,6 +67,7 @@ r: parseInt(match[2]),
 	}
         ret[tab].width = 0;
         ret[tab].data = [];
+if (range) {
 	for (var j = range.s.r; j <= range.e.r; j ++) {
 	    var row = [];
 	    isempty = -1;
@@ -89,6 +90,7 @@ r: parseInt(match[2]),
                 ret[tab].width = Math.max(ret[tab].width, row.length);
 	    }
 	}
+}
         if (excel_parse_options["with-merge-cells"] && 'undefined' !== typeof(workbook.Sheets[tab]['!merges'])) {
             for ( var i = 0; i < workbook.Sheets[tab]['!merges'].length; i ++ ) {
                 var merge = workbook.Sheets[tab]['!merges'][i];
